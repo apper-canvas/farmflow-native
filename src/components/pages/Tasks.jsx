@@ -196,127 +196,131 @@ const Tasks = () => {
         }
       />
 
-      {showForm && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Card className="max-w-4xl mx-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-earth-900">
-                  {editingTask ? "Edit Task" : "Add New Task"}
-                </h2>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={resetForm}
-                  className="p-2"
-                >
-                  <ApperIcon name="X" size={20} />
-                </Button>
+{showForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.2 }}
+            className="w-full max-w-4xl max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Card className="mx-auto">
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-earth-900">
+                    {editingTask ? "Edit Task" : "Add New Task"}
+                  </h2>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={resetForm}
+                    className="p-2"
+                  >
+                    <ApperIcon name="X" size={20} />
+                  </Button>
+                </div>
+
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      type="select"
+                      label="Farm"
+                      value={formData.farmId}
+                      onChange={(value) => handleChange("farmId", value)}
+                      options={farms.map(farm => ({
+                        value: farm.Id.toString(),
+                        label: farm.name
+                      }))}
+                      error={formErrors.farmId}
+                    />
+
+                    <FormField
+                      type="select"
+                      label="Crop (Optional)"
+                      value={formData.cropId}
+                      onChange={(value) => handleChange("cropId", value)}
+                      options={[
+                        { value: "", label: "Select a crop" },
+                        ...getFilteredCrops().map(crop => ({
+                          value: crop.Id.toString(),
+                          label: crop.cropType
+                        }))
+                      ]}
+                    />
+                  </div>
+
+                  <FormField
+                    label="Task Title"
+                    value={formData.title}
+                    onChange={(value) => handleChange("title", value)}
+                    placeholder="e.g., Water tomato plants"
+                    error={formErrors.title}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <FormField
+                      type="select"
+                      label="Task Type"
+                      value={formData.type}
+                      onChange={(value) => handleChange("type", value)}
+                      options={[
+                        { value: "watering", label: "Watering" },
+                        { value: "fertilizing", label: "Fertilizing" },
+                        { value: "harvesting", label: "Harvesting" },
+                        { value: "planting", label: "Planting" },
+                        { value: "weeding", label: "Weeding" },
+                        { value: "pest_control", label: "Pest Control" },
+                        { value: "maintenance", label: "Maintenance" },
+                        { value: "inspection", label: "Inspection" },
+                        { value: "other", label: "Other" },
+                      ]}
+                    />
+
+                    <FormField
+                      type="date"
+                      label="Due Date"
+                      value={formData.dueDate}
+                      onChange={(value) => handleChange("dueDate", value)}
+                      error={formErrors.dueDate}
+                    />
+
+                    <FormField
+                      type="select"
+                      label="Priority"
+                      value={formData.priority}
+                      onChange={(value) => handleChange("priority", value)}
+                      options={[
+                        { value: "low", label: "Low" },
+                        { value: "medium", label: "Medium" },
+                        { value: "high", label: "High" },
+                      ]}
+                    />
+                  </div>
+
+                  <FormField
+                    type="textarea"
+                    label="Notes"
+                    value={formData.notes}
+                    onChange={(value) => handleChange("notes", value)}
+                    placeholder="Additional details about this task..."
+                    rows={3}
+                  />
+
+                  <div className="flex justify-end space-x-4">
+                    <Button variant="outline" type="button" onClick={resetForm}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" className="flex items-center">
+                      <ApperIcon name="Save" size={16} className="mr-2" />
+                      {editingTask ? "Update Task" : "Create Task"}
+                    </Button>
+                  </div>
+                </form>
               </div>
-
-              <form onSubmit={handleFormSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    type="select"
-                    label="Farm"
-                    value={formData.farmId}
-                    onChange={(value) => handleChange("farmId", value)}
-                    options={farms.map(farm => ({
-                      value: farm.Id.toString(),
-                      label: farm.name
-                    }))}
-                    error={formErrors.farmId}
-                  />
-
-                  <FormField
-                    type="select"
-                    label="Crop (Optional)"
-                    value={formData.cropId}
-                    onChange={(value) => handleChange("cropId", value)}
-                    options={[
-                      { value: "", label: "Select a crop" },
-                      ...getFilteredCrops().map(crop => ({
-                        value: crop.Id.toString(),
-                        label: crop.cropType
-                      }))
-                    ]}
-                  />
-                </div>
-
-                <FormField
-                  label="Task Title"
-                  value={formData.title}
-                  onChange={(value) => handleChange("title", value)}
-                  placeholder="e.g., Water tomato plants"
-                  error={formErrors.title}
-                />
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <FormField
-                    type="select"
-                    label="Task Type"
-                    value={formData.type}
-                    onChange={(value) => handleChange("type", value)}
-                    options={[
-                      { value: "watering", label: "Watering" },
-                      { value: "fertilizing", label: "Fertilizing" },
-                      { value: "harvesting", label: "Harvesting" },
-                      { value: "planting", label: "Planting" },
-                      { value: "weeding", label: "Weeding" },
-                      { value: "pest_control", label: "Pest Control" },
-                      { value: "maintenance", label: "Maintenance" },
-                      { value: "inspection", label: "Inspection" },
-                      { value: "other", label: "Other" },
-                    ]}
-                  />
-
-                  <FormField
-                    type="date"
-                    label="Due Date"
-                    value={formData.dueDate}
-                    onChange={(value) => handleChange("dueDate", value)}
-                    error={formErrors.dueDate}
-                  />
-
-                  <FormField
-                    type="select"
-                    label="Priority"
-                    value={formData.priority}
-                    onChange={(value) => handleChange("priority", value)}
-                    options={[
-                      { value: "low", label: "Low" },
-                      { value: "medium", label: "Medium" },
-                      { value: "high", label: "High" },
-                    ]}
-                  />
-                </div>
-
-                <FormField
-                  type="textarea"
-                  label="Notes"
-                  value={formData.notes}
-                  onChange={(value) => handleChange("notes", value)}
-                  placeholder="Additional details about this task..."
-                  rows={3}
-                />
-
-                <div className="flex justify-end space-x-4">
-                  <Button variant="outline" type="button" onClick={resetForm}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" className="flex items-center">
-                    <ApperIcon name="Save" size={16} className="mr-2" />
-                    {editingTask ? "Update Task" : "Create Task"}
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </Card>
-        </motion.div>
+            </Card>
+          </motion.div>
+        </div>
       )}
 
       {tasks.length === 0 ? (
