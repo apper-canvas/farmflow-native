@@ -1,10 +1,10 @@
 import { toast } from "react-toastify";
 
 class WeatherService {
-  constructor() {
+constructor() {
     this.apperClient = null;
     this.initializeClient();
-    this.apiKey = '9b8c4b7c8e0a4b3d2f1e5a9c8b7d6e4f'; // Demo API key - replace with actual key
+    this.apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY; // OpenWeatherMap API key from environment
     this.baseUrl = 'https://api.openweathermap.org/data/2.5';
     this.cachedData = null;
     this.lastUpdateTime = null;
