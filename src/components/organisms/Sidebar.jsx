@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import NavigationItem from "@/components/molecules/NavigationItem";
 import ApperIcon from "@/components/ApperIcon";
-
+import Button from "@/components/atoms/Button";
+import { AuthContext } from "../../App";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
 
   const navigationItems = [
     { to: "/", icon: "BarChart3", label: "Dashboard" },
@@ -14,6 +16,10 @@ const Sidebar = () => {
     { to: "/finance", icon: "DollarSign", label: "Finance" },
     { to: "/weather", icon: "CloudSun", label: "Weather" },
   ];
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <>
@@ -49,13 +55,25 @@ const Sidebar = () => {
             <h1 className="text-xl font-bold gradient-text">FarmFlow</h1>
           </div>
           
-          <nav className="space-y-2">
+<nav className="space-y-2">
             {navigationItems.map((item) => (
               <NavigationItem key={item.to} to={item.to} icon={item.icon}>
                 {item.label}
               </NavigationItem>
             ))}
           </nav>
+          
+          <div className="mt-8 pt-4 border-t border-earth-200">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center space-x-2"
+            >
+              <ApperIcon name="LogOut" size={16} />
+              <span>Logout</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -77,13 +95,25 @@ const Sidebar = () => {
                 <h1 className="text-xl font-bold gradient-text">FarmFlow</h1>
               </div>
               
-              <nav className="space-y-2">
+<nav className="space-y-2">
                 {navigationItems.map((item) => (
                   <NavigationItem key={item.to} to={item.to} icon={item.icon}>
                     {item.label}
                   </NavigationItem>
                 ))}
               </nav>
+              
+              <div className="mt-8 pt-4 border-t border-earth-200">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center space-x-2"
+                >
+                  <ApperIcon name="LogOut" size={16} />
+                  <span>Logout</span>
+                </Button>
+              </div>
             </div>
           </motion.div>
         )}

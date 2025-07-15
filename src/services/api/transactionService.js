@@ -1,62 +1,277 @@
-import transactionsData from "@/services/mockData/transactions.json";
+import { toast } from "react-toastify";
 
 class TransactionService {
   constructor() {
-    this.transactions = [...transactionsData];
+    this.apperClient = null;
+    this.initializeClient();
   }
 
-  async delay(ms = 300) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+  initializeClient() {
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
   }
 
   async getAll() {
-    await this.delay();
-    return [...this.transactions];
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "type" } },
+          { field: { Name: "category" } },
+          { field: { Name: "amount" } },
+          { field: { Name: "date" } },
+          { field: { Name: "description" } },
+          { field: { Name: "farm_id" } }
+        ]
+      };
+
+      const response = await this.apperClient.fetchRecords("transaction", params);
+      
+      if (!response || !response.data || response.data.length === 0) {
+        return [];
+      }
+      
+      return response.data.map(transaction => ({
+        Id: transaction.Id,
+        name: transaction.Name,
+        tags: transaction.Tags,
+        farmId: transaction.farm_id?.toString() || "",
+        type: transaction.type,
+        category: transaction.category,
+        amount: transaction.amount,
+        date: transaction.date,
+        description: transaction.description
+      }));
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching transactions:", error?.response?.data?.message);
+      } else {
+        console.error("Error fetching transactions:", error.message);
+      }
+      return [];
+    }
   }
 
   async getById(id) {
-    await this.delay();
-    const transaction = this.transactions.find(t => t.Id === parseInt(id));
-    if (!transaction) {
-      throw new Error(`Transaction with ID ${id} not found`);
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "type" } },
+          { field: { Name: "category" } },
+          { field: { Name: "amount" } },
+          { field: { Name: "date" } },
+          { field: { Name: "description" } },
+          { field: { Name: "farm_id" } }
+        ]
+      };
+
+      const response = await this.apperClient.getRecordById("transaction", parseInt(id), params);
+      
+      if (!response || !response.data) {
+        return null;
+      }
+      
+      return {
+        Id: response.data.Id,
+        name: response.data.Name,
+        tags: response.data.Tags,
+        farmId: response.data.farm_id?.toString() || "",
+        type: response.data.type,
+        category: response.data.category,
+        amount: response.data.amount,
+        date: response.data.date,
+        description: response.data.description
+      };
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error(`Error fetching transaction with ID ${id}:`, error?.response?.data?.message);
+      } else {
+        console.error(`Error fetching transaction with ID ${id}:`, error.message);
+      }
+      return null;
     }
-    return { ...transaction };
   }
 
   async create(transactionData) {
-    await this.delay();
-    const maxId = Math.max(...this.transactions.map(t => t.Id), 0);
-    const newTransaction = {
-      ...transactionData,
-      Id: maxId + 1,
-    };
-    this.transactions.push(newTransaction);
-    return { ...newTransaction };
+    try {
+      const params = {
+        records: [
+          {
+            Name: transactionData.description,
+            type: transactionData.type,
+            category: transactionData.category,
+            amount: transactionData.amount,
+            date: transactionData.date,
+            description: transactionData.description,
+            farm_id: transactionData.farmId ? parseInt(transactionData.farmId) : null
+          }
+        ]
+      };
+
+      const response = await this.apperClient.createRecord("transaction", params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} transactions:${JSON.stringify(failedRecords)}`);
+          
+          failedRecords.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        if (successfulRecords.length > 0) {
+          const newTransaction = successfulRecords[0].data;
+          return {
+            Id: newTransaction.Id,
+            name: newTransaction.Name,
+            tags: newTransaction.Tags,
+            farmId: newTransaction.farm_id?.toString() || "",
+            type: newTransaction.type,
+            category: newTransaction.category,
+            amount: newTransaction.amount,
+            date: newTransaction.date,
+            description: newTransaction.description
+          };
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating transaction:", error?.response?.data?.message);
+      } else {
+        console.error("Error creating transaction:", error.message);
+      }
+      return null;
+    }
   }
 
   async update(id, transactionData) {
-    await this.delay();
-    const index = this.transactions.findIndex(t => t.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Transaction with ID ${id} not found`);
+    try {
+      const params = {
+        records: [
+          {
+            Id: parseInt(id),
+            Name: transactionData.description,
+            type: transactionData.type,
+            category: transactionData.category,
+            amount: transactionData.amount,
+            date: transactionData.date,
+            description: transactionData.description,
+            farm_id: transactionData.farmId ? parseInt(transactionData.farmId) : null
+          }
+        ]
+      };
+
+      const response = await this.apperClient.updateRecord("transaction", params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return null;
+      }
+      
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} transactions:${JSON.stringify(failedUpdates)}`);
+          
+          failedUpdates.forEach(record => {
+            record.errors?.forEach(error => {
+              toast.error(`${error.fieldLabel}: ${error.message}`);
+            });
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        if (successfulUpdates.length > 0) {
+          const updatedTransaction = successfulUpdates[0].data;
+          return {
+            Id: updatedTransaction.Id,
+            name: updatedTransaction.Name,
+            tags: updatedTransaction.Tags,
+            farmId: updatedTransaction.farm_id?.toString() || "",
+            type: updatedTransaction.type,
+            category: updatedTransaction.category,
+            amount: updatedTransaction.amount,
+            date: updatedTransaction.date,
+            description: updatedTransaction.description
+          };
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error updating transaction:", error?.response?.data?.message);
+      } else {
+        console.error("Error updating transaction:", error.message);
+      }
+      return null;
     }
-    this.transactions[index] = { ...transactionData, Id: parseInt(id) };
-    return { ...this.transactions[index] };
   }
 
   async delete(id) {
-    await this.delay();
-    const index = this.transactions.findIndex(t => t.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Transaction with ID ${id} not found`);
+    try {
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await this.apperClient.deleteRecord("transaction", params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        toast.error(response.message);
+        return false;
+      }
+      
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success);
+        const failedDeletions = response.results.filter(result => !result.success);
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete ${failedDeletions.length} transactions:${JSON.stringify(failedDeletions)}`);
+          
+          failedDeletions.forEach(record => {
+            if (record.message) toast.error(record.message);
+          });
+        }
+        
+        return successfulDeletions.length > 0;
+      }
+      
+      return false;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error deleting transaction:", error?.response?.data?.message);
+      } else {
+        console.error("Error deleting transaction:", error.message);
+      }
+      return false;
     }
-    this.transactions.splice(index, 1);
-return true;
   }
 
   async exportTransactions(transactions, startDate, endDate) {
-    await this.delay(500);
-    
     // Create CSV content
     const headers = ['Date', 'Type', 'Description', 'Category', 'Amount'];
     const csvContent = [
@@ -90,8 +305,6 @@ return true;
   }
 
   async exportTransactionsPDF(transactions, startDate, endDate) {
-    await this.delay(500);
-    
     // Calculate totals
     const totalIncome = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
