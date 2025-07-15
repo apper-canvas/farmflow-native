@@ -1,0 +1,47 @@
+[
+  {
+    "Id": 1,
+    "date": "2024-12-20T00:00:00Z",
+    "tempHigh": 72,
+    "tempLow": 45,
+    "precipitation": 15,
+    "conditions": "Partly Cloudy",
+    "icon": "partly-cloudy"
+  },
+  {
+    "Id": 2,
+    "date": "2024-12-21T00:00:00Z",
+    "tempHigh": 75,
+    "tempLow": 48,
+    "precipitation": 5,
+    "conditions": "Sunny",
+    "icon": "sunny"
+  },
+  {
+    "Id": 3,
+    "date": "2024-12-22T00:00:00Z",
+    "tempHigh": 68,
+    "tempLow": 42,
+    "precipitation": 60,
+    "conditions": "Rainy",
+    "icon": "rainy"
+  },
+  {
+    "Id": 4,
+    "date": "2024-12-23T00:00:00Z",
+    "tempHigh": 70,
+    "tempLow": 44,
+    "precipitation": 35,
+    "conditions": "Cloudy",
+    "icon": "cloudy"
+  },
+  {
+    "Id": 5,
+    "date": "2024-12-24T00:00:00Z",
+    "tempHigh": 73,
+    "tempLow": 46,
+    "precipitation": 10,
+    "conditions": "Partly Cloudy",
+    "icon": "partly-cloudy"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "farmId": "1",
+    "type": "expense",
+    "category": "seeds",
+    "amount": 1250.00,
+    "date": "2024-12-10T00:00:00Z",
+    "description": "Corn seeds for spring planting"
+  },
+  {
+    "Id": 2,
+    "farmId": "1",
+    "type": "expense",
+    "category": "fertilizer",
+    "amount": 850.00,
+    "date": "2024-12-12T00:00:00Z",
+    "description": "Organic fertilizer for tomatoes"
+  },
+  {
+    "Id": 3,
+    "farmId": "2",
+    "type": "income",
+    "category": "crop_sales",
+    "amount": 4500.00,
+    "date": "2024-12-15T00:00:00Z",
+    "description": "Wheat harvest sale to local mill"
+  },
+  {
+    "Id": 4,
+    "farmId": "2",
+    "type": "expense",
+    "category": "equipment",
+    "amount": 320.00,
+    "date": "2024-12-16T00:00:00Z",
+    "description": "Irrigation system repairs"
+  },
+  {
+    "Id": 5,
+    "farmId": "3",
+    "type": "expense",
+    "category": "fuel",
+    "amount": 180.00,
+    "date": "2024-12-17T00:00:00Z",
+    "description": "Diesel fuel for tractors"
+  },
+  {
+    "Id": 6,
+    "farmId": "1",
+    "type": "income",
+    "category": "crop_sales",
+    "amount": 2800.00,
+    "date": "2024-12-18T00:00:00Z",
+    "description": "Tomato sales to farmers market"
+  },
+  {
+    "Id": 7,
+    "farmId": "4",
+    "type": "expense",
+    "category": "labor",
+    "amount": 600.00,
+    "date": "2024-12-19T00:00:00Z",
+    "description": "Seasonal workers for grape harvest"
+  },
+  {
+    "Id": 8,
+    "farmId": "3",
+    "type": "income",
+    "category": "subsidies",
+    "amount": 1200.00,
+    "date": "2024-12-20T00:00:00Z",
+    "description": "Government agricultural subsidy"
+  }
+]

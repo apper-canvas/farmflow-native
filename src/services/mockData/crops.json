@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "farmId": "1",
+    "farmName": "Green Valley Farm",
+    "cropType": "Corn",
+    "plantingDate": "2024-04-15T00:00:00Z",
+    "expectedHarvest": "2024-09-15T00:00:00Z",
+    "quantity": 25,
+    "unit": "acres",
+    "status": "growing",
+    "notes": "Hybrid variety, good soil conditions"
+  },
+  {
+    "Id": 2,
+    "farmId": "1",
+    "farmName": "Green Valley Farm",
+    "cropType": "Tomatoes",
+    "plantingDate": "2024-05-01T00:00:00Z",
+    "expectedHarvest": "2024-08-01T00:00:00Z",
+    "quantity": 500,
+    "unit": "plants",
+    "status": "flowering",
+    "notes": "Cherry tomatoes, greenhouse grown"
+  },
+  {
+    "Id": 3,
+    "farmId": "2",
+    "farmName": "Sunny Acres",
+    "cropType": "Wheat",
+    "plantingDate": "2024-03-20T00:00:00Z",
+    "expectedHarvest": "2024-07-20T00:00:00Z",
+    "quantity": 40,
+    "unit": "acres",
+    "status": "ready",
+    "notes": "Winter wheat variety"
+  },
+  {
+    "Id": 4,
+    "farmId": "2",
+    "farmName": "Sunny Acres",
+    "cropType": "Soybeans",
+    "plantingDate": "2024-05-15T00:00:00Z",
+    "expectedHarvest": "2024-10-15T00:00:00Z",
+    "quantity": 30,
+    "unit": "acres",
+    "status": "planted",
+    "notes": "Non-GMO variety"
+  },
+  {
+    "Id": 5,
+    "farmId": "3",
+    "farmName": "Prairie View Farm",
+    "cropType": "Potatoes",
+    "plantingDate": "2024-04-10T00:00:00Z",
+    "expectedHarvest": "2024-08-10T00:00:00Z",
+    "quantity": 15,
+    "unit": "acres",
+    "status": "growing",
+    "notes": "Russet Burbank variety"
+  },
+  {
+    "Id": 6,
+    "farmId": "4",
+    "farmName": "Hillside Ranch",
+    "cropType": "Grapes",
+    "plantingDate": "2024-03-01T00:00:00Z",
+    "expectedHarvest": "2024-09-01T00:00:00Z",
+    "quantity": 1200,
+    "unit": "vines",
+    "status": "growing",
+    "notes": "Cabernet Sauvignon, organic"
+  }
+]

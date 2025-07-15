@@ -1,0 +1,38 @@
+[
+  {
+    "Id": 1,
+    "name": "Green Valley Farm",
+    "size": 150,
+    "sizeUnit": "acres",
+    "location": "Fresno County, California",
+    "createdAt": "2023-01-15T08:00:00Z",
+    "activeCrops": 4
+  },
+  {
+    "Id": 2,
+    "name": "Sunny Acres",
+    "size": 85,
+    "sizeUnit": "acres",
+    "location": "Lancaster County, Pennsylvania",
+    "createdAt": "2023-03-22T10:30:00Z",
+    "activeCrops": 3
+  },
+  {
+    "Id": 3,
+    "name": "Prairie View Farm",
+    "size": 220,
+    "sizeUnit": "acres",
+    "location": "Story County, Iowa",
+    "createdAt": "2023-05-10T14:15:00Z",
+    "activeCrops": 2
+  },
+  {
+    "Id": 4,
+    "name": "Hillside Ranch",
+    "size": 95,
+    "sizeUnit": "acres",
+    "location": "Napa County, California",
+    "createdAt": "2023-07-08T09:45:00Z",
+    "activeCrops": 1
+  }
+]
