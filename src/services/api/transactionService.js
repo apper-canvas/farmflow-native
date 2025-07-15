@@ -155,7 +155,6 @@ class TransactionService {
             description: newTransaction.description
           };
         }
-        }
       }
       
       return null;
