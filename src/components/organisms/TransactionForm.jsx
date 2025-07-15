@@ -1,10 +1,10 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import Card from "@/components/atoms/Card";
 import FormField from "@/components/molecules/FormField";
-import ApperIcon from "@/components/ApperIcon";
 
 const TransactionForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -16,31 +16,13 @@ const TransactionForm = ({ onSubmit, onCancel }) => {
     farmId: "1",
   });
 
-  const [errors, setErrors] = useState({});
-
-const expenseCategories = [
-    { value: "seeds", label: "Seeds & Planting" },
-    { value: "fertilizer", label: "Fertilizer" },
-    { value: "equipment", label: "Equipment" },
-    { value: "fuel", label: "Fuel" },
-    { value: "labor", label: "Labor" },
-  ];
-
-  const incomeCategories = [
-    { value: "crop_sales", label: "Crop Sales" },
-    { value: "livestock", label: "Livestock" },
-    { value: "subsidies", label: "Subsidies" },
-    { value: "grants", label: "Grants" },
-    { value: "services", label: "Services" },
-    { value: "other", label: "Other" },
-  ];
+const [errors, setErrors] = useState({});
 
   const farms = [
     { value: "1", label: "Green Valley Farm" },
     { value: "2", label: "Sunny Acres" },
     { value: "3", label: "Prairie View Farm" },
   ];
-
   const handleChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -67,6 +49,20 @@ const expenseCategories = [
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
+// Category options matching exact database picklist values
+  const expenseCategories = [
+    { value: "seeds", label: "Seeds" },
+    { value: "fertilizer", label: "Fertilizer" },
+    { value: "equipment", label: "Equipment" },
+    { value: "fuel", label: "Fuel" },
+    { value: "labor", label: "Labor" }
+  ];
+
+  const incomeCategories = [
+    { value: "crop_sales", label: "Crop Sales" },
+    { value: "subsidies", label: "Subsidies" }
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
