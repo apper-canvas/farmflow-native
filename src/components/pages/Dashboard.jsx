@@ -71,11 +71,20 @@ if (loading) return <Loading />;
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Weather Widget */}
+{/* Weather Widget */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold text-earth-900">Weather Forecast</h3>
-            <ApperIcon name="CloudSun" size={20} className="text-earth-600" />
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => dispatch(loadDashboardData())}
+                className="p-1 hover:bg-earth-100 rounded transition-colors"
+                title="Refresh weather data"
+              >
+                <ApperIcon name="RefreshCw" size={16} className="text-earth-600" />
+              </button>
+              <ApperIcon name="CloudSun" size={20} className="text-earth-600" />
+            </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             {weather.slice(0, 4).map((day, index) => (

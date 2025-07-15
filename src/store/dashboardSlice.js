@@ -48,9 +48,10 @@ export const loadDashboardData = createAsyncThunk(
           totalExpenses,
           profit: totalIncome - totalExpenses,
         },
-        recentTasks,
+recentTasks,
         recentTransactions,
         weather: weather.slice(0, 5),
+        weatherLastUpdated: weather.length > 0 ? weather[0].lastUpdated : null,
       };
     } catch (error) {
       return rejectWithValue(error.message || 'Failed to load dashboard data');

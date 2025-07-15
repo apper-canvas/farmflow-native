@@ -55,7 +55,7 @@ const WeatherCard = ({ weather, index }) => {
             <p className="text-sm text-earth-600">
               {weather.tempLow}°
             </p>
-          </div>
+</div>
           
           <div className="flex items-center space-x-1 text-xs text-earth-500">
             <ApperIcon name="Droplets" size={12} />
@@ -65,6 +65,19 @@ const WeatherCard = ({ weather, index }) => {
           <p className="text-xs text-earth-600 font-medium">
             {weather.conditions}
           </p>
+          
+          {weather.realTime && (
+            <div className="flex items-center space-x-1 text-xs text-green-600">
+              <ApperIcon name="Wifi" size={10} />
+              <span>Live</span>
+            </div>
+          )}
+          
+          {weather.lastUpdated && (
+            <p className="text-xs text-earth-500">
+              Updated: {new Date(weather.lastUpdated).toLocaleTimeString()}
+            </p>
+          )}
         </div>
       </Card>
     </motion.div>
