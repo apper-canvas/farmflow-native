@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
-
+import { store } from "@/store/store";
+import { loadDashboardData } from "@/store/dashboardSlice";
 class CropService {
   constructor() {
     this.apperClient = null;
@@ -147,8 +148,10 @@ class CropService {
           });
         }
         
-        if (successfulRecords.length > 0) {
+if (successfulRecords.length > 0) {
           const newCrop = successfulRecords[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: newCrop.Id,
             name: newCrop.Name,
@@ -218,8 +221,10 @@ class CropService {
           });
         }
         
-        if (successfulUpdates.length > 0) {
+if (successfulUpdates.length > 0) {
           const updatedCrop = successfulUpdates[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: updatedCrop.Id,
             name: updatedCrop.Name,
@@ -271,6 +276,11 @@ class CropService {
           failedDeletions.forEach(record => {
             if (record.message) toast.error(record.message);
           });
+}
+        
+        if (successfulDeletions.length > 0) {
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
         }
         
         return successfulDeletions.length > 0;

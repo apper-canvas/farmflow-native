@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
-
+import { store } from "@/store/store";
+import { loadDashboardData } from "@/store/dashboardSlice";
 class TaskService {
   constructor() {
     this.apperClient = null;
@@ -160,8 +161,10 @@ class TaskService {
           });
         }
         
-        if (successfulRecords.length > 0) {
+if (successfulRecords.length > 0) {
           const newTask = successfulRecords[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: newTask.Id,
             name: newTask.Name,
@@ -235,8 +238,10 @@ class TaskService {
           });
         }
         
-        if (successfulUpdates.length > 0) {
+if (successfulUpdates.length > 0) {
           const updatedTask = successfulUpdates[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: updatedTask.Id,
             name: updatedTask.Name,
@@ -291,6 +296,11 @@ class TaskService {
           failedDeletions.forEach(record => {
             if (record.message) toast.error(record.message);
           });
+}
+        
+        if (successfulDeletions.length > 0) {
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
         }
         
         return successfulDeletions.length > 0;

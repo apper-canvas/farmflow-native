@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
-
+import { loadDashboardData } from "@/store/dashboardSlice";
+import React from "react";
+import { store } from "@/store/store";
 class TransactionService {
   constructor() {
     this.apperClient = null;
@@ -135,10 +137,12 @@ class TransactionService {
             });
             if (record.message) toast.error(record.message);
           });
-        }
+}
         
         if (successfulRecords.length > 0) {
           const newTransaction = successfulRecords[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: newTransaction.Id,
             name: newTransaction.Name,
@@ -150,6 +154,7 @@ class TransactionService {
             date: newTransaction.date,
             description: newTransaction.description
           };
+        }
         }
       }
       
@@ -202,10 +207,12 @@ class TransactionService {
             });
             if (record.message) toast.error(record.message);
           });
-        }
+}
         
         if (successfulUpdates.length > 0) {
           const updatedTransaction = successfulUpdates[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: updatedTransaction.Id,
             name: updatedTransaction.Name,
@@ -253,8 +260,13 @@ class TransactionService {
           console.error(`Failed to delete ${failedDeletions.length} transactions:${JSON.stringify(failedDeletions)}`);
           
           failedDeletions.forEach(record => {
-            if (record.message) toast.error(record.message);
+if (record.message) toast.error(record.message);
           });
+        }
+        
+        if (successfulDeletions.length > 0) {
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
         }
         
         return successfulDeletions.length > 0;

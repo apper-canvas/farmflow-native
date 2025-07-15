@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
-
+import { store } from "@/store/store";
+import { loadDashboardData } from "@/store/dashboardSlice";
 class FarmService {
   constructor() {
     this.apperClient = null;
@@ -132,8 +133,10 @@ class FarmService {
           });
         }
         
-        if (successfulRecords.length > 0) {
+if (successfulRecords.length > 0) {
           const newFarm = successfulRecords[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: newFarm.Id,
             name: newFarm.Name,
@@ -196,8 +199,10 @@ class FarmService {
           });
         }
         
-        if (successfulUpdates.length > 0) {
+if (successfulUpdates.length > 0) {
           const updatedFarm = successfulUpdates[0].data;
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
           return {
             Id: updatedFarm.Id,
             name: updatedFarm.Name,
@@ -246,6 +251,11 @@ class FarmService {
           failedDeletions.forEach(record => {
             if (record.message) toast.error(record.message);
           });
+}
+        
+        if (successfulDeletions.length > 0) {
+          // Trigger dashboard refresh
+          store.dispatch(loadDashboardData());
         }
         
         return successfulDeletions.length > 0;

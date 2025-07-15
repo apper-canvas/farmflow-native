@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import Header from "@/components/organisms/Header";
 import StatCard from "@/components/molecules/StatCard";
@@ -8,77 +9,23 @@ import Badge from "@/components/atoms/Badge";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import ApperIcon from "@/components/ApperIcon";
-import { farmService } from "@/services/api/farmService";
-import { cropService } from "@/services/api/cropService";
-import { taskService } from "@/services/api/taskService";
-import { transactionService } from "@/services/api/transactionService";
-import { weatherService } from "@/services/api/weatherService";
+import { loadDashboardData } from "@/store/dashboardSlice";
 
 const Dashboard = () => {
-  const [dashboardData, setDashboardData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const loadDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const [farms, crops, tasks, transactions, weather] = await Promise.all([
-        farmService.getAll(),
-        cropService.getAll(),
-        taskService.getAll(),
-        transactionService.getAll(),
-        weatherService.getAll(),
-      ]);
-
-      const activeCrops = crops.filter(crop => ["planted", "growing", "flowering"].includes(crop.status.toLowerCase()));
-      const pendingTasks = tasks.filter(task => !task.completed);
-      const completedTasks = tasks.filter(task => task.completed);
-      
-      const totalIncome = transactions
-        .filter(t => t.type === "income")
-        .reduce((sum, t) => sum + t.amount, 0);
-      
-      const totalExpenses = transactions
-        .filter(t => t.type === "expense")
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      const recentTasks = tasks
-        .sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate))
-        .slice(0, 5);
-
-      const recentTransactions = transactions
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 5);
-
-      setDashboardData({
-        stats: {
-          totalFarms: farms.length,
-          activeCrops: activeCrops.length,
-          pendingTasks: pendingTasks.length,
-          completedTasks: completedTasks.length,
-          totalIncome,
-          totalExpenses,
-          profit: totalIncome - totalExpenses,
-        },
-        recentTasks,
-        recentTransactions,
-        weather: weather.slice(0, 5),
-      });
-    } catch (err) {
-      setError("Failed to load dashboard data");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const dispatch = useDispatch();
+  const { data: dashboardData, loading, error } = useSelector((state) => state.dashboard);
 
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+    dispatch(loadDashboardData());
+  }, [dispatch]);
 
-  if (loading) return <Loading />;
-  if (error) return <Error message={error} onRetry={loadDashboardData} />;
+  const handleRetry = () => {
+    dispatch(loadDashboardData());
+  };
+
+if (loading) return <Loading />;
+  if (error) return <Error message={error} onRetry={handleRetry} />;
+  if (!dashboardData) return <Loading />;
 
   const { stats, recentTasks, recentTransactions, weather } = dashboardData;
 
