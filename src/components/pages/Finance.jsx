@@ -1,26 +1,27 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import Header from "@/components/organisms/Header";
+import { format } from "date-fns";
+import ApperIcon from "@/components/ApperIcon";
 import TransactionForm from "@/components/organisms/TransactionForm";
-import StatCard from "@/components/molecules/StatCard";
+import ExportDialog from "@/components/organisms/ExportDialog";
+import Header from "@/components/organisms/Header";
+import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
 import Card from "@/components/atoms/Card";
-import Badge from "@/components/atoms/Badge";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
+import Error from "@/components/ui/Error";
+import Loading from "@/components/ui/Loading";
+import StatCard from "@/components/molecules/StatCard";
 import { transactionService } from "@/services/api/transactionService";
-import { format } from "date-fns";
 
 const Finance = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
   const [filter, setFilter] = useState("all");
-
   const loadTransactions = async () => {
     try {
       setLoading(true);
@@ -58,13 +59,37 @@ const Finance = () => {
     } catch (err) {
       toast.error("Failed to delete transaction");
     }
+};
+
+  const handleExport = async (format, startDate, endDate) => {
+    try {
+      const dateFilteredTransactions = transactions.filter(transaction => {
+        const transactionDate = new Date(transaction.date);
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? new Date(endDate) : null;
+        
+        if (start && transactionDate < start) return false;
+        if (end && transactionDate > end) return false;
+        return true;
+      });
+
+      if (format === 'csv') {
+        await transactionService.exportTransactions(dateFilteredTransactions, startDate, endDate);
+      } else if (format === 'pdf') {
+        await transactionService.exportTransactionsPDF(dateFilteredTransactions, startDate, endDate);
+      }
+      
+      setShowExportDialog(false);
+      toast.success(`Financial report exported as ${format.toUpperCase()} successfully!`);
+    } catch (err) {
+      toast.error(`Failed to export ${format.toUpperCase()} report`);
+    }
   };
 
   const filteredTransactions = transactions.filter(transaction => {
     if (filter === "all") return true;
     return transaction.type === filter;
   });
-
   const totalIncome = transactions
     .filter(t => t.type === "income")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -79,24 +104,40 @@ const Finance = () => {
   if (error) return <Error message={error} onRetry={loadTransactions} />;
 
   return (
-    <div className="p-6 space-y-6">
+<div className="p-6 space-y-6">
       <Header 
         title="Finance" 
         actions={
-          <Button 
-            onClick={() => setShowForm(true)}
-            className="flex items-center"
-          >
-            <ApperIcon name="Plus" size={16} className="mr-2" />
-            Add Transaction
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline"
+              onClick={() => setShowExportDialog(true)}
+              className="flex items-center"
+            >
+              <ApperIcon name="Download" size={16} className="mr-2" />
+              Export Report
+            </Button>
+            <Button 
+              onClick={() => setShowForm(true)}
+              className="flex items-center"
+            >
+              <ApperIcon name="Plus" size={16} className="mr-2" />
+              Add Transaction
+            </Button>
+          </div>
         }
       />
-
       {showForm && (
         <TransactionForm
           onSubmit={handleAddTransaction}
           onCancel={() => setShowForm(false)}
+        />
+)}
+
+      {showExportDialog && (
+        <ExportDialog
+          onExport={handleExport}
+          onCancel={() => setShowExportDialog(false)}
         />
       )}
 
