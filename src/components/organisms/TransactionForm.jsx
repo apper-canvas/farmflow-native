@@ -18,17 +18,12 @@ const TransactionForm = ({ onSubmit, onCancel }) => {
 
   const [errors, setErrors] = useState({});
 
-  const expenseCategories = [
+const expenseCategories = [
     { value: "seeds", label: "Seeds & Planting" },
     { value: "fertilizer", label: "Fertilizer" },
-    { value: "pesticides", label: "Pesticides" },
     { value: "equipment", label: "Equipment" },
-    { value: "labor", label: "Labor" },
     { value: "fuel", label: "Fuel" },
-    { value: "utilities", label: "Utilities" },
-    { value: "maintenance", label: "Maintenance" },
-    { value: "insurance", label: "Insurance" },
-    { value: "other", label: "Other" },
+    { value: "labor", label: "Labor" },
   ];
 
   const incomeCategories = [
